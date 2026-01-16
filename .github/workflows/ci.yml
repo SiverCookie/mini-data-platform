@@ -1,0 +1,41 @@
+name: CI - Mini Data Platform
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker images
+        run: |
+          docker-compose build
+
+      - name: Start ingestion service
+        run: |
+          docker-compose up -d ingestion
+          sleep 10
+
+      - name: Health check
+        run: |
+          curl http://localhost:8000/health
+
+      - name: Upload sample CSV
+        run: |
+          curl -X POST "http://localhost:8000/ingest/csv" \
+            -F "file=@input/sample.csv"
+
+      - name: Run processing service
+        run: |
+          docker-compose run --rm processing
+
+      - name: Stop services
+        if: always()
+        run: |
+          docker-compose down
