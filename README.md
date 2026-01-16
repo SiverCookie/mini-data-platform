@@ -21,31 +21,7 @@ a Processing Service (Spark batch job)
 
 Both services exchange data through a shared data layer.
 
-Architecture
-Client (curl / API)
-        |
-        v
-┌────────────────────┐
-│  Ingestion Service │  (FastAPI)
-│  - accepts CSV     │
-│  - basic validation│
-│  - writes raw data │
-└─────────┬──────────┘
-          |
-          v
-      Raw Data Layer
-        (CSV files)
-          |
-          v
-┌────────────────────┐
-│ Processing Service │  (Spark)
-│ - batch processing │
-│ - aggregation      │
-│ - writes results   │
-└─────────┬──────────┘
-          |
-          v
-   Processed Data Layer
+![Architecture](docs/architecture.png)
 
 Services
 1. Ingestion Service
@@ -95,6 +71,13 @@ data/
 
 In local development, these layers are implemented as mounted Docker volumes.
 In a production setup, they would be replaced by object storage (e.g. S3) or a distributed filesystem.
+
+## Design Decisions
+
+- Ingestion and processing are separated into two services to mirror real data platforms.
+- Spark is used in local mode to demonstrate distributed processing concepts without cluster overhead.
+- Data is exchanged via shared volume to simulate object storage (S3/GCS).
+- Docker is used to ensure reproducibility and CI compatibility.
 
 Running the Project (Windows + Docker Desktop)
 Prerequisites
@@ -180,3 +163,11 @@ Add monitoring and logging
 Author
 
 Built as a hands-on learning project to explore data platforms, distributed processing concepts, and container-based workflows.
+
+## Scaling Considerations
+
+If this were production-grade:
+- Raw data would be stored in S3/GCS instead of local volumes
+- Spark would run on a cluster (EMR / Dataproc)
+- Orchestration would be handled by Airflow
+- Schema evolution would be managed via a metastore
