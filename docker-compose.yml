@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  ingestion:
+    build: ./ingestion-service
+    container_name: ingestion-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+
+  processing:
+    build: ./processing-service
+    container_name: processing-service
+    volumes:
+      - ./data:/data
+    depends_on:
+      - ingestion
