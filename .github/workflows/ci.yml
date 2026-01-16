@@ -15,11 +15,11 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker-compose build
+          docker compose build
 
       - name: Start ingestion service
         run: |
-          docker-compose up -d ingestion
+          docker compose up -d ingestion
           sleep 10
 
       - name: Health check
@@ -33,9 +33,9 @@ jobs:
 
       - name: Run processing service
         run: |
-          docker-compose run --rm processing
+          docker compose run --rm processing
 
       - name: Stop services
         if: always()
         run: |
-          docker-compose down
+          docker compose down
