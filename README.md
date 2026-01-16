@@ -1,3 +1,5 @@
+![CI](https://github.com/SiverCookie/mini-data-platform/actions/workflows/ci.yml/badge.svg)
+
 Mini Data Platform – Ingestion & Spark Processing
 Overview
 
